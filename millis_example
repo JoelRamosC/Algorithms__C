@@ -1,0 +1,25 @@
+const int ledPin =  LED_BUILTIN;// the number of the LED pin
+
+int ledState = LOW;             // ledState used to set the LED
+
+unsigned long previousMillis = 0;        // will store last time LED was updated
+
+const long interval = 1000;           // interval at which to blink (milliseconds)
+
+void setup() {
+  Serial.begin(9600);
+  pinMode(ledPin, OUTPUT);
+}
+void loop() {
+  unsigned long currentMillis = millis();
+  if (currentMillis - previousMillis >= interval) {
+    // save the last time you blinked the LED
+    previousMillis = currentMillis;
+    if (ledState == LOW) {
+      ledState = HIGH;
+    } else {
+      ledState = LOW;
+    }
+    digitalWrite(ledPin, ledState);
+  }
+}
