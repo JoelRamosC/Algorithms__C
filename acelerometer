@@ -1,0 +1,47 @@
+#include <SoftwareSerial.h>
+#include <Wire.h>
+#define eixo_x A0
+#define eixo_y A1
+#define eixo_z A2
+
+int x,y,z,x_ant,y_ant,z_ant;
+int setpoint_ace;
+
+const int MPU=0x68;
+
+int acx,acy,acz,tmp,giro_x,giro_y,giro_z,setpoint, erro;
+
+void setup() {
+  Serial.begin(9600);
+  x_ant = analogRead(eixo_x); 
+  y_ant = analogRead(eixo_y); 
+  z_ant = analogRead(eixo_z); 
+
+  Wire.begin(MPU);
+  Wire.beginTransmission(MPU);
+  Wire.write(0x6B);
+  Wire.write(0);
+  Wire.endTransmission(true);
+}
+void loop() {
+//    x = (analogRead(eixo_x)+ x_ant)/2; 
+//    y = (analogRead(eixo_y)+ y_ant)/2; 
+//    z = (analogRead(eixo_z) + z_ant)/2; 
+//    x_ant = x;
+//    y_ant = y;
+//    z_ant = z;
+  Wire.beginTransmission(MPU);
+  Wire.write(0x3B);
+  Wire.endTransmission(false);
+  Wire.requestFrom(MPU,14,true);
+  acx=Wire.read()<<8|Wire.read();
+  acy=Wire.read()<<8|Wire.read();
+  acz=Wire.read()<<8|Wire.read();
+  tmp=Wire.read()<<8|Wire.read();
+  giro_x=Wire.read()<<8|Wire.read();
+  giro_y=Wire.read()<<8|Wire.read();
+  giro_z=Wire.read()<<8|Wire.read();
+ 
+  Serial.println(giro_x);
+    
+}
