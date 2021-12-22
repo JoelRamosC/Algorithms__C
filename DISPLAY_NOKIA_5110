@@ -1,0 +1,160 @@
+       /*CONEXÕES ENTRE O DISPLAY NOKIA 5110 E O ARDUINO*/
+
+              // 8  Pino LIGHT / BL / (LED) ---> Pino 3.3V / (Pino 5V no Display Azul)
+              // 7  Pino SCK / CLK / (SCLK) ---> Pino 6
+              // 6  Pino DIN / (DN<MOSI>)------> Pino 5
+              // 5  Pino DC / (D/C) -----------> Pino 4
+              // 4  Pino RST ------------------> Pino 8
+              // 3  Pino CS / CE / (SCE) ------> Pino 3
+              // 2  Pino GND ------------------> Pino GND
+              // 1  Pino VCC ------------------> Pino 3.3V
+
+          /*CONEXÕES ENTRE O DISPLAY NOKIA 5110 E O ARDUINO*/
+
+#include <SPI.h> //INCLUSÃO DE BIBLIOTECA
+#include <Adafruit_GFX.h> //INCLUSÃO DE BIBLIOTECA
+#include <Adafruit_PCD8544.h> //INCLUSÃO DE BIBLIOTECA
+
+//OBJETO DO TIPO Adafruit_PCD8544 COM OS PARÂMETROS (PINOS)
+Adafruit_PCD8544 display = Adafruit_PCD8544(6, 5, 4, 3, 8);
+
+int rotatetext = 0; //VARIÁVEL DE CONTROLE DA ROTAÇÃO DO TEXTO NO DISPLAY
+
+void setup(){
+  Serial.begin(9600); //INICIALIZA A SERIAL
+  display.begin(); //INICIALIZA O DISPLAY
+  display.setContrast(20); //DEFINE O CONTRASTE DO DISPLAY
+  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+}
+
+void loop(){
+  
+  rotatetext = 0; //REINICIA A CONTAGEM DA VARIÁVEL APÓS INÍCIO DO LOOP
+  
+  /*EXIBE TEXTO SIMPLES*/
+  while (true){
+  display.setTextSize(1); //DEFINE O TAMANHO DA FONTE DO TEXTO
+  display.setTextColor(BLACK); //DEFINE A COR DO TEXTO
+  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+  display.println("Inicializando Protocolos"); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+   delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+     delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+     delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+  delay(1000); //INTERVALO DE 2 SEGUNDOS
+  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+delay(1000);
+  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+  display.println("Atualizando Rede Neural"); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+  delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+     delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+     delay(800); //INTERVALO DE 2 SEGUNDOS
+  display.println("."); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+  delay(1000); //INTERVALO DE 2 SEGUNDOS
+  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+  delay(2000);
+  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+  display.println("Meu Nome Eh 14Bis!"); //ESCREVE O TEXTO NO DISPLAY
+  display.display();
+  delay(2000); //INTERVALO DE 2 SEGUNDOS
+  delay(2000); //INTERVALO DE 2 SEGUNDOS
+  delay(2000); //INTERVALO DE 2 SEGUNDOS
+  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+
+  
+
+  
+  }
+  
+  /*EXIBE TEXTO SIMPLES*/
+
+  /*CORES DO TEXTO INVERTIDO (TEXTO EM BRANCO E FUNDO PRETO)*/
+  
+//  display.setTextColor(WHITE, BLACK); //TEXTO INVERTIDO
+//  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+//  display.println("Oi Gatona linda!"); //ESCREVE O TEXTO NO DISPLAY
+//  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+//  delay(2000); //INTERVALO DE 2 SEGUNDOS
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+  
+  /*CORES DO TEXTO INVERTIDO (TEXTO EM BRANCO E FUNDO PRETO)*/
+
+  /*TEXTO COM FONTE EM TAMANHO 2*/
+  
+//  display.setTextColor(BLACK);
+//  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+//  display.setTextSize(2); //DEFINE O TAMANHO DA FONTE DO TEXTO
+//  display.println("Ola!"); //ESCREVE O TEXTO NO DISPLAY
+//  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+//  delay(2000); //INTERVALO DE 2 SEGUNDOS
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+  /*TEXTO COM FONTE EM TAMANHO 2*/
+
+  /*EXIBE A NUMERAÇÃO DE 1 A 9*/
+  
+  display.setTextSize(1); //DEFINE O TAMANHO DA FONTE DO TEXTO
+  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+  display.println(123456789); //ESCREVE A SEQUÊNCIA NO DISPLAY
+  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+  delay(2000); //INTERVALO DE 2 SEGUNDOS
+  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+  /*EXIBE A NUMERAÇÃO DE 1 A 9*/
+  
+  /*EXIBE UM NÚMERO EM HEXADECIMAL (0xFF) E O RESPECTIVO DECIMAL (255)*/
+  
+//  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+//  display.print("0x"); display.print(0xFF, HEX); //ESCREVE O TEXTO NO DISPLAY
+//  display.print("(HEX) = "); //ESCREVE O TEXTO NO DISPLAY
+//  display.print(0xFF, DEC); //ESCREVE O TEXTO NO DISPLAY
+//  display.println("(DEC)"); //ESCREVE O TEXTO NO DISPLAY
+//  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+//  delay(2000); //INTERVALO DE 2 SEGUNDOS
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+  /*EXIBE UM NÚMERO EM HEXADECIMAL (0xFF) E O RESPECTIVO DECIMAL (255)*/
+
+  /*EXIBE UM SÍMBOLO DA TABELA ASCII DE CARACTERES*/
+  
+//  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+//  display.setTextSize(2); //DEFINE O TAMANHO DA FONTE
+//  display.write(3); //ESCREVE O NÚMERO 3 QUE REPRESENTA O SÍMBOLO DE UM CORAÇÃO 
+//  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+//  delay(2000); //INTERVALO DE 2 SEGUNDOS
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+
+  /*EXIBE UM SÍMBOLO DA TABELA ASCII DE CARACTERES*/
+
+  /*ROTACIONA O TEXTO NO DISPLAY*/
+  
+//  while(rotatetext < 5){ //ENQUANTO rotatetext FOR MENOR QUE 5, FAZ
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+//  display.setRotation(rotatetext); //ROTACIONA O TEXTO EM 90º
+//  display.setTextSize(1); //DEFINE O TAMANHO DA FONTE
+//  display.setTextColor(BLACK); //DEFINE A COR DO TEXTO
+//  display.setCursor(0,0); //POSIÇÃO EM QUE O CURSOR IRÁ FAZER A ESCRITA (COLUNA,LINHA)
+//  display.println("Rotacionando"); //ESCREVE O TEXTO NO DISPLAY
+//  display.display(); //EFETIVA A ESCRITA NO DISPLAY
+//  delay(1000); //INTERVALO DE 1 SEGUNDOS
+//  display.clearDisplay(); //LIMPA AS INFORMAÇÕES DO DISPLAY
+//  rotatetext++;
+  }
+  
+  /*ROTACIONA O TEXTO NO DISPLAY*/
