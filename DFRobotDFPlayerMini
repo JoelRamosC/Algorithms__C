@@ -1,0 +1,61 @@
+#include <SoftwareSerial.h>
+#include <Servo.h>
+#include <DFRobotDFPlayerMini.h>
+#include <Wire.h>
+
+SoftwareSerial ComunicaAudio(12, 13); // RX, TX 12,13
+DFRobotDFPlayerMini myDFPlayer;//Objeto responsável pela comunicação com o módulo MP3 (DFPlayer Mini)
+
+#define slaveAdress 0x08
+
+String dado_serial;
+int maxSongs;
+
+void setup() {
+  Wire.begin();
+  ComunicaAudio.begin(9600);
+  Serial.begin(115200);
+  Serial.println();
+  Serial.println("DFRobot DFPlayer Mini");
+  Serial.println("Inicializando modulo DFPlayer... (3~5 segundos)");
+  if (!myDFPlayer.begin(ComunicaAudio))
+  {
+    Serial.println("Nao inicializado:");
+    Serial.println("1.Cheque as conexoes do DFPlayer Mini");
+    Serial.println("2.Insira um cartao SD");
+    while (true);
+  }
+  Serial.println();
+  Serial.println("Modulo DFPlayer Mini inicializado!");
+  myDFPlayer.setTimeOut(500); //Timeout serial 500ms
+  myDFPlayer.volume(25);
+  myDFPlayer.EQ(0); //Equalizacao normal
+  maxSongs = myDFPlayer.readFileCounts(DFPLAYER_DEVICE_SD);
+  Serial.println();
+  Serial.print("Numero de arquivos no cartao SD: ");
+  Serial.println(maxSongs);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    dado_serial = Serial.readStringUntil('\n');
+    Serial.println(dado_serial.toInt());
+    switch (dado_serial.toInt()) {
+      case 1:
+        myDFPlayer.play(1);
+        break;
+      case 2:
+        myDFPlayer.play(2);
+        break;
+      case 3:
+        myDFPlayer.play(3);
+        break;
+      case 4:
+        myDFPlayer.play(4);
+        break;
+      case 5:
+        myDFPlayer.play(5);
+        break;
+    }
+  }
+}
