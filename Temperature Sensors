@@ -1,0 +1,37 @@
+/*
+Projeto Arduino
+Touca com Sensores de Temperatura */
+
+float t0,t1,t2,t3,t4,t5;
+int saida;
+
+void setup() {
+  pinMode(2,OUTPUT);  //Define porta 2 como saída
+  pinMode(3,INPUT);   // lmite superior
+  Serial.begin(9600); //Inicializando o serial monitor
+}
+
+void loop() { 
+  
+  t0 = analogRead(0)*0.488;
+  t1 = analogRead(1)*0.488;
+  t2 = analogRead(2)*0.488;
+  t3 = analogRead(3)*0.488;
+  t4 = analogRead(4)*0.488;
+  
+  Serial.println();
+  Serial.print(" T0= ");Serial.print(t0);
+  Serial.println();
+  Serial.print(" T1= ");Serial.print(t1);
+  Serial.println();
+  Serial.print(" T2= ");Serial.print(t2);
+  Serial.println();
+  Serial.print(" T3= ");Serial.print(t3);
+  Serial.println();
+  Serial.print(" T4= ");Serial.print(t4);
+  Serial.println();
+
+  delay(1000);
+  delay(1000);
+  delay(1000);
+}
