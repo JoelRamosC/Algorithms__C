@@ -1,0 +1,83 @@
+#include <SoftwareSerial.h>
+#include <Servo.h>
+
+Servo headH;
+Servo headV;
+
+String dado_serial;
+int angle;
+
+
+void setup() {
+  Serial.begin(9600);
+
+  headH.attach(4);
+  headV.attach(5);
+  headH.write(90);
+  headV.write(0);
+}
+
+void loop() {
+  if (Serial.available() > 0) {
+    dado_serial = Serial.readStringUntil('\n');
+    Serial.println(dado_serial.toInt()); //Esquerdo=6 Direito=5 cabecaH=7 cabecaV=8
+    switch (dado_serial.toInt()) {
+      case 75: //Horizontal Direito
+        Serial.println("Horizontal Direito");
+        move_servo(60 ,30,'h');
+        break;
+      case 76: //Horizontal Esquerdo
+        Serial.println("Horizontal Esquerdo");
+        move_servo(110 ,30,'h');
+        break;
+        
+      case 81: //Vertical Subir
+        Serial.println("Vertical Subir");
+        move_servo(0 ,30,'v');
+        break;
+      case 82: //Vertical Descer
+        Serial.println("Vertical Descer");
+        move_servo(45 ,30,'v');
+        break;
+    }
+  }
+  delay(random (50,1000));
+  move_servo(random (0,50),random (10,50),'v');
+  delay(random (50,300));
+  move_servo(random (60,110),random (10,50),'h');
+  delay(random (50,1000));
+  
+}
+
+void move_servo(int posicao_final, int velocidade_servo, char membro) {
+  switch (membro) {
+    case 'h':
+      angle = headH.read();
+      if (angle > posicao_final) {
+        for (angle = headH.read(); angle >= posicao_final; angle -= 1) {
+          headH.write(angle);
+          delay(velocidade_servo);
+        }
+      } else {
+        for (angle = headH.read(); angle <= posicao_final; angle += 1) {
+          headH.write(angle);
+          delay(velocidade_servo);
+        }
+      }
+      break;
+    case 'v':
+      angle = headV.read();
+      if (angle > posicao_final) {
+        for (angle = headV.read(); angle >= posicao_final; angle -= 1) {
+          headV.write(angle);
+          delay(velocidade_servo);
+        }
+      } else {
+        for (angle = headV.read(); angle <= posicao_final; angle += 1) {
+          headV.write(angle);
+          delay(velocidade_servo);
+        }
+      }
+      break;
+  }
+}
