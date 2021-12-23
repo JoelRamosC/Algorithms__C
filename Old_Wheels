@@ -1,0 +1,312 @@
+#include <SoftwareSerial.h>
+
+//Saídas PWM
+#define rodaE  8
+#define rodaD  9
+#define bracoD  10
+#define bracoE  11
+
+////Direção do Movimento
+#define rodaE_1 46 //IN1
+#define rodaE_2 47 //IN2
+#define rodaD_1 48 //IN3
+#define rodaD_2 49 //IN4
+
+//Direção do Movimento
+#define bracoE_1 50 //IN1
+#define bracoE_2 51 //IN2
+#define bracoD_1 52 //IN3
+#define bracoD_2 53 //IN4
+
+#define para_frente   A12
+#define para_tras     A13
+#define pot A14
+
+
+String dado_serial;
+int potenciometro;
+int flag;
+int giro;
+int energia;
+
+void setup() {
+  Serial.begin(9600);
+  // TCCR0B = TCCR0B & 0b11111000 | 0X05; //Temporizador 0 (PWM pinos 5 & 6)
+  // TCCR2B = TCCR2B & 0b11111000 | 0X07 ; //temporizador 2 (PWM pinos 3 & 11)
+  pinMode(rodaD,     OUTPUT);
+  pinMode(rodaE,     OUTPUT);
+  pinMode(bracoD,    OUTPUT);
+  pinMode(bracoE,    OUTPUT);
+
+  pinMode(rodaD_1,   OUTPUT);
+  pinMode(rodaE_1,   OUTPUT);
+  pinMode(rodaD_2,   OUTPUT);
+  pinMode(rodaE_2,   OUTPUT);
+
+  pinMode(bracoD_1,   OUTPUT);
+  pinMode(bracoE_1,   OUTPUT);
+  pinMode(bracoD_2,   OUTPUT);
+  pinMode(bracoE_2,   OUTPUT);
+
+  pinMode(para_frente,   INPUT_PULLUP);
+  pinMode(para_tras,     INPUT_PULLUP);
+}
+
+void loop() {
+//  while (true) {
+//    //Para Frente
+//    while (digitalRead(para_frente) == LOW) {
+//      Serial.println("Para Frente Acionado");
+//      digitalWrite(rodaE_1, LOW);
+//      digitalWrite(rodaE_2, LOW);
+//      delay(10);
+//      digitalWrite(rodaD_1, LOW);
+//      digitalWrite(rodaD_2, LOW);
+//      delay(10);
+//      energia = (analogRead(pot)) / 4;
+//      analogWrite(rodaE, energia);
+//      analogWrite(rodaD, energia);
+//      Serial.println(energia);
+//      delay(100);
+//    }
+//    //Para Tras
+//    while (digitalRead(para_tras) == LOW) {
+//      Serial.println("Para Tras Acionado");
+//      digitalWrite(rodaE_1, HIGH);
+//      digitalWrite(rodaE_2, HIGH);
+//      delay(10);
+//      digitalWrite(rodaD_1, HIGH);
+//      digitalWrite(rodaD_2, HIGH);
+//      delay(10);
+//      energia = (analogRead(pot)) / 4;
+//      analogWrite(rodaE, energia);
+//      analogWrite(rodaD, energia);
+//      Serial.println(energia);
+//      delay(100);
+//    }
+//  }
+//
+//  while (digitalRead(para_frente) == LOW) {
+//    Serial.println("Para Frente Acionado");
+//    energia = (analogRead(pot)) / 4;
+//    Serial.println(energia);
+//    delay(100);
+//  }
+//  while (digitalRead(para_tras) == LOW) {
+//    Serial.println("Para Tras Acionado");
+//    energia = (analogRead(pot)) / 4;
+//    Serial.println(energia);
+//    delay(100);
+//  }
+
+  energia = 0;
+  analogWrite(rodaE, 0);
+  analogWrite(rodaD, 0);
+  if (Serial.available() > 0) {
+    dado_serial = Serial.readStringUntil('\n');
+    Serial.println(dado_serial.toInt());
+    switch (dado_serial.toInt()) {
+      case 31: //Rodas com controle de botões e potenciometro
+        while (true) {
+          //Para Frente
+          while (digitalRead(para_frente) == LOW) {
+            Serial.println("Para Frente Acionado");
+            digitalWrite(rodaE_1, LOW);
+            digitalWrite(rodaE_2, LOW);
+            delay(10);
+            digitalWrite(rodaD_1, LOW);
+            digitalWrite(rodaD_2, LOW);
+            delay(10);
+            energia = (analogRead(pot)) / 4;
+            analogWrite(rodaE, energia);
+            analogWrite(rodaD, energia);
+            Serial.println(energia);
+            delay(100);
+          }
+          while (digitalRead(para_tras) == LOW) {
+            Serial.println("Para Tras Acionado");
+            digitalWrite(rodaE_1, HIGH);
+            digitalWrite(rodaE_2, HIGH);
+            delay(10);
+            digitalWrite(rodaD_1, HIGH);
+            digitalWrite(rodaD_2, HIGH);
+            delay(10);
+            energia = (analogRead(pot)) / 4;
+            analogWrite(rodaE, energia);
+            analogWrite(rodaD, energia);
+            Serial.println(energia);
+            delay(100);
+          }
+        }
+        break;
+
+      case 32: // Aciona uma roda de cada vez
+        if (true) {
+          Serial.println("Aciona Roda E Anti-Horario");
+          digitalWrite(rodaD_1, LOW);
+          digitalWrite(rodaD_2, LOW);
+          delay(100);
+          for (int i = 1; i < 255; i++) {
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          for (int i = 255; i > 1; i--) {
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          analogWrite(rodaD, 0);
+
+          Serial.println("Aciona Roda E Anti-Horario");
+          digitalWrite(rodaD_1, HIGH);
+          digitalWrite(rodaD_2, HIGH);
+          delay(100);
+          for (int i = 1; i < 255; i++) {
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          for (int i = 255; i > 1; i--) {
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          analogWrite(rodaD, 0);
+        }
+        break;
+
+      case 33: // Girar roda com potênciometros
+        while (true) {
+          giro = analogRead(A0) / 4;
+          analogWrite(rodaE, giro);
+          Serial.println(giro);
+        }
+        break;
+
+      case 34: // Aciona rodas no sentido horário e anti-horário
+        if (true) {
+          Serial.println("Aciona Rodas Horario");
+          digitalWrite(rodaE_1, LOW);
+          digitalWrite(rodaE_2, LOW);
+          delay(500);
+          digitalWrite(rodaD_1, LOW);
+          digitalWrite(rodaD_2, LOW);
+          delay(500);
+          for (int i = 1; i < 255; i++) {
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          for (int i = 255; i > 1; i--) {
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          analogWrite(rodaE, 0);
+          analogWrite(rodaD, 0);
+
+          Serial.println("Aciona Rodas Anti-Horario");
+          digitalWrite(rodaE_1, HIGH);
+          digitalWrite(rodaE_2, HIGH);
+          delay(500);
+          digitalWrite(rodaD_1, HIGH);
+          digitalWrite(rodaD_2, HIGH);
+          delay(500);
+          for (int i = 1; i < 255; i++) {
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          delay(1000);
+          for (int i = 255; i > 1; i--) {
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          analogWrite(rodaE, 0);
+          analogWrite(rodaD, 0);
+        }
+        break;
+
+      case 35: // Gira as rodas e os braços no máximo
+        if (true) {
+          digitalWrite(bracoD_1, LOW);
+          digitalWrite(bracoD_2, LOW);
+          delay(500);
+          digitalWrite(bracoE_1, LOW);
+          digitalWrite(bracoE_2, LOW);
+          delay(500);
+          for (int i = 1; i < 256; i++) {
+            analogWrite(bracoD, i);
+            analogWrite(bracoE, i);
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(2000);
+          delay(2000);
+          delay(2000);
+          delay(2000);
+          for (int i = 255; i >= 0; i--) {
+            analogWrite(bracoD, i);
+            analogWrite(bracoE, i);
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+
+          digitalWrite(bracoD_1, HIGH);
+          digitalWrite(bracoD_2, HIGH);
+          delay(500);
+          digitalWrite(bracoE_1, HIGH);
+          digitalWrite(bracoE_2, HIGH);
+          delay(500);
+          for (int i = 1; i < 256; i++) {
+            analogWrite(bracoD, i);
+            analogWrite(bracoE, i);
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, 1);
+            Serial.println(i);
+            delay(100);
+          }
+          delay(2000);
+          delay(2000);
+          delay(2000);
+          delay(2000);
+          for (int i = 255; i >= 0; i--) {
+            analogWrite(bracoD, i);
+            analogWrite(bracoE, i);
+            analogWrite(rodaE, i);
+            analogWrite(rodaD, i);
+            Serial.println(i);
+            delay(100);
+          }
+          analogWrite(bracoD, 0);
+          analogWrite(bracoE, 0);
+        }
+        break;
+    }
+  }
+}
