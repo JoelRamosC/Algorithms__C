@@ -1,0 +1,97 @@
+#include <SoftwareSerial.h>
+
+#define led_d1          5
+#define led_d2          6
+#define led_d3          7
+#define led_conexao     8
+#define led_on    9
+
+#define bt_d1           2
+#define bt_d2           3
+#define bt_d3           4
+
+String dado_serial;
+boolean flag_bt1 = 0, flag_bt2 = 0, flag_bt3 = 0, flag_on = 0;
+int valor_velocidade = 0;
+
+void setup() {
+  Serial.begin(38400);
+  Serial.println();
+  Serial.println("Mente Inicializada...");
+
+  pinMode(bt_d1, INPUT_PULLUP);
+  pinMode(bt_d2, INPUT_PULLUP);
+  pinMode(bt_d3, INPUT_PULLUP);
+
+  pinMode(led_d1,          OUTPUT);
+  pinMode(led_d2,          OUTPUT);
+  pinMode(led_d3,          OUTPUT);
+  pinMode(led_conexao,     OUTPUT);
+  pinMode(led_on,          OUTPUT);
+}
+
+void loop() {
+  if (random(1, 21000) < 7) {
+    flag_on = !flag_on;
+    digitalWrite(led_conexao, flag_on);
+    digitalWrite(led_on, !flag_on);
+  }
+
+  if (digitalRead(bt_d1) == LOW) {
+    valor_velocidade = analogRead(0)/4;
+    flag_bt1 = !flag_bt1;
+    Serial.println("1_"+String(valor_velocidade));
+    delay(300);
+    while (digitalRead(bt_d1) == LOW) {
+      digitalWrite(led_d1, HIGH);
+      delay(10);
+      if (digitalRead(bt_d1) == HIGH) {
+        flag_bt1 = !flag_bt1;
+        digitalWrite(led_d1, LOW);
+        Serial.println(1);
+      }
+    }
+  }
+
+  if (digitalRead(bt_d2) == LOW) {
+    delay(300);
+    flag_bt2 = !flag_bt2;
+    Serial.println(2);
+    while (digitalRead(bt_d2) == LOW) {
+      digitalWrite(led_d2, HIGH);
+      delay(10);
+      if (digitalRead(bt_d2) == HIGH) {
+        flag_bt2 = !flag_bt2;
+        digitalWrite(led_d2, LOW);
+        Serial.println(2);
+      }
+    }
+  }
+
+  if (digitalRead(bt_d3) == LOW) {
+    delay(300);
+    flag_bt3 = !flag_bt3;
+    Serial.println(3);
+    while (digitalRead(bt_d3) == LOW) {
+      digitalWrite(led_d3, HIGH);
+      delay(10);
+      if (digitalRead(bt_d3) == HIGH) {
+        flag_bt3 = !flag_bt3;
+        digitalWrite(led_d3, LOW);
+        Serial.println(3);
+      }
+    }
+  }
+}
+
+  // if (digitalRead(bt_d1) == LOW) {
+  //    flag_bt1 = !flag_bt1;
+  //    Serial.println(1);
+  //    if (flag_bt1 == 0) {
+  //      digitalWrite(led_d1, LOW);
+  //    }
+  //    if (flag_bt1 == 1) {
+  //      digitalWrite(led_d1, HIGH);
+  //    }
+  //    delay(400);
+  //  }
