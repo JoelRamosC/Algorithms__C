@@ -1,0 +1,26 @@
+#include <SoftwareSerial.h>
+
+String dado_serial, valor;
+
+void setup() {
+  Serial.begin(9600);
+}
+
+void loop() {
+  while (Serial.available() > 0) {
+    dado_serial = Serial.readString();
+    Serial.println(dado_serial);
+    if (dado_serial.startsWith("s1")){
+      valor = dado_serial.substring(2,dado_serial.length());
+      Serial.println(valor.toInt());
+    }
+    if (dado_serial.startsWith("s2")){
+      valor = dado_serial.substring(2,dado_serial.length());
+      Serial.println(valor.toInt());
+    }
+    if (dado_serial.startsWith("s3")){
+      valor = dado_serial.substring(2,dado_serial.length());
+      Serial.println(valor.toInt());
+    }
+  }
+}
