@@ -1,0 +1,67 @@
+//==== Inclusão de bibliotecas ====//
+#include <VirtualWire.h>
+
+//==== Mapemamento de Hardware e constantes =====//
+#define Size           3
+
+#define pinFrente      A0
+#define BotaoDireita   4
+#define BotaoEsquerda  3
+#define pinLedFrente   5
+
+
+//===== Variáveis globais ========//
+byte TX_buffer[3];
+
+int energia = 0, vira_esquerda = 12, vira_direita = 12;
+
+void setup()
+{
+  Serial.begin(9600);
+  pinMode(pinLedFrente,         OUTPUT);
+  pinMode(BotaoDireita,   INPUT_PULLUP);
+  pinMode(BotaoEsquerda,  INPUT_PULLUP);
+
+
+
+  vw_set_tx_pin(2); //Seleciona o pino de comunicação do TX
+  vw_setup(2000); // Velocidade de comunicação em BPS
+}//endSetup
+
+void loop()
+{
+  energia   = map(analogRead(pinFrente ), 0, 1023, 0, 255);
+  analogWrite(pinLedFrente, energia);
+
+  if (digitalRead(BotaoEsquerda) == HIGH) {
+    vira_esquerda = 12;
+  }
+  if (digitalRead(BotaoDireita) == HIGH) {
+    vira_direita = 12;
+  }
+
+  if (digitalRead(BotaoEsquerda) == LOW) {
+    vira_esquerda = 14;
+  }
+  if (digitalRead(BotaoDireita) == LOW) {
+    vira_direita = 10;
+  }
+
+  if (energia > 10) {
+    TX_buffer[0] = energia;
+  }
+  else {
+    TX_buffer[0] = 0;
+  }
+  TX_buffer[1] = vira_esquerda;
+  TX_buffer[2] = vira_direita;
+
+  Serial.println(energia);
+  //  Serial.println(vira_esquerda);
+  //  Serial.println(vira_direita);
+
+  vw_send(TX_buffer, Size);
+  vw_wait_tx();
+
+
+}//endLoop
