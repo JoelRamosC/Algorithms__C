@@ -1,0 +1,48 @@
+#define LEDPot 3
+
+#define MotorD 5
+#define MotorE 6
+
+#define pot1 A0
+#define pot2 A1
+
+
+void setup()
+{
+  Serial.begin(9600);
+
+  pinMode(LEDPot, OUTPUT);
+  pinMode(MotorD, OUTPUT);
+  pinMode(MotorE, OUTPUT);
+
+  analogWrite(MotorD,215);
+  analogWrite(MotorE,200);
+  delay(200);
+}
+
+void loop(){
+     int leitura_1 = map(analogRead(pot1),0,1023,0,255);
+//     int leitura_2 = map(analogRead(pot2),0,1023,0,255);
+
+     int sorteador = random(1,3);
+     if (sorteador == 1){
+     analogWrite(MotorD,leitura_1+15+random(1,30));
+     analogWrite(MotorE,leitura_1+random(1,30));
+     }
+     if (sorteador == 2){
+     analogWrite(MotorD,leitura_1+15-random(1,20));
+     analogWrite(MotorE,leitura_1-random(1,20));
+     }
+
+     if (sorteador == 3){
+     analogWrite(MotorD,leitura_1+15);
+     analogWrite(MotorE,leitura_1);
+     }
+
+     delay(1000);
+     delay(1000);
+     delay(1000);
+     delay(random(100,1000));
+
+     Serial.println(leitura_1);
+}
