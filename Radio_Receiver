@@ -1,0 +1,92 @@
+//==== Inclusão de bibliotecas ====//
+#include <ServoTimer2.h>
+#include <VirtualWire.h>
+
+ServoTimer2 peD;
+ServoTimer2 peE;
+
+//==== Mapemamento de Hardware e constantes =====//
+#define pinLEDPot 3
+#define pinLEDvira 4
+
+#define pinMotorD 5
+#define pinMotorE 6
+
+//===== Variáveis globais ========//
+byte message[VW_MAX_MESSAGE_LEN]; // Um buffer para armazenar as mensagens
+byte messageLength = VW_MAX_MESSAGE_LEN; // Tamanho máximo das mensagens recebidas
+
+
+void setup()
+{
+  //Inicia comunicação serialcom velocidade de 9600 BPS
+  Serial.begin(9600);
+
+  //Entradas/Saídas digitais
+  pinMode(pinLEDPot, OUTPUT);
+  pinMode(pinMotorD, OUTPUT);
+  pinMode(pinMotorE, OUTPUT);
+
+  pinMode(pinLEDvira, OUTPUT);
+
+
+
+  peE.attach(10);
+  peD.attach(11);
+
+  peE.write(1200);
+  peD.write(1200);
+
+  vw_set_rx_pin(2); //Seleciona o pino para recepção dos dados
+  vw_setup(2000);   //Velocidade de comunicação em BPS
+  vw_rx_start();    //Começa a receber os dados
+
+}//endSetup
+
+void loop()
+{
+  if (vw_get_message(message, &messageLength))// Se houver dados para receber
+  {
+    analogWrite(pinLEDPot, message[0]);
+    digitalWrite(pinLEDvira,LOW);
+
+    if (message[0] >= 15){
+      int velocidade = message[0]+30;
+      if (velocidade > 254){
+        velocidade = message[0];
+      }
+      analogWrite(pinMotorD, velocidade);
+      analogWrite(pinMotorE, message[0]);
+    }
+    if (message[0] < 15){
+      analogWrite(pinMotorD, 0);
+      analogWrite(pinMotorE, 0);
+    }
+
+    if (message[1] == 14){
+     peE.write(message[1]*100);
+     peD.write(message[1]*100);
+     digitalWrite(pinLEDvira,HIGH);
+     Serial.println(message[1]*100);
+    }
+
+    if (message[2] == 10){
+     peE.write(message[2]*100);
+     peD.write(message[2]*100);
+     digitalWrite(pinLEDvira,HIGH);
+     Serial.println(message[2]*100);
+
+    }
+
+    if ((message[2] == 12) && (message[1] == 12)){
+     peE.write(message[1]*100);
+     peD.write(message[1]*100);
+    }
+    
+    
+    Serial.println(message[0]);
+    Serial.println();
+    delay(100);
+  }
+
+}//endLoop
